@@ -1,5 +1,8 @@
 from rest_framework import routers
-from transcript.views import EtudiantViewSet
+from transcript.views import AmphiViewSet, EtudiantViewSet, EvaluationViewSet,TranscriptViewSet
 
 router = routers.DefaultRouter()
-router.register('etudiant',EtudiantViewSet)
+router.register('etudiants',EtudiantViewSet)
+router.register('amphis',AmphiViewSet)
+router.register('transcripts',TranscriptViewSet)
+router.register('evaluations',EvaluationViewSet)

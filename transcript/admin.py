@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from transcript.models import AcademicYear, Amphi, Etudiant, Evaluation, Exam, Faculty, Filiere, Level, Obtain, Participate, SchoolAt, Semester, Transcript, Ue
+from transcript.models import AcademicYear, Amphi, Etudiant, Evaluation, Faculty, Filiere, Level, SchoolAt, Semester, Transcript, Ue
 
 
 @admin.register(AcademicYear)
@@ -26,10 +26,6 @@ class LevelAdmin(admin.ModelAdmin):
 @admin.register(Amphi)
 class AmphiAdmin(admin.ModelAdmin):
     list_display = ('name','level','filiere')
-    
-@admin.register(Exam)
-class ExamAdmin(admin.ModelAdmin):
-    list_display = ('code','intitule')
     
 @admin.register(Evaluation)
 class EvaluationAdmin(admin.ModelAdmin):
