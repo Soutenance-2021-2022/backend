@@ -10,7 +10,6 @@ class Faculty(models.Model):
     abrev = models.CharField(max_length=10)
     name = models.CharField(max_length=200)
     
-   
 
 class Filiere(models.Model):
     name = models.CharField(max_length=255)
@@ -32,11 +31,11 @@ class Amphi(models.Model):
    
        
 class Evaluation(models.Model):
-    note = models.DecimalField(max_digits=3, decimal_places=2)
-    decision = models.CharField(max_length=10)
-    grade = models.CharField(max_length=5)
+    note = models.DecimalField(max_digits=4, decimal_places=2)
+    decision = models.CharField(max_length=10,default = None)
+    grade = models.CharField(max_length=5,default = None)
     ue = models.ForeignKey('UE',null=False, on_delete=models.CASCADE)
-    etudiant = models.ForeignKey('Etudiant',null=False, on_delete=models.CASCADE)
+    etudiant = models.ForeignKey('Etudiant',null=False,default = None, on_delete=models.CASCADE)
     
    
 class Semester(models.Model):
@@ -72,7 +71,7 @@ class SchoolAt(models.Model):
    
 class Transcript(models.Model):
     number = models.CharField(max_length=255)
-    mgp = models.PositiveSmallIntegerField()
+    mgp = models.DecimalField(max_digits=3, decimal_places=2)
     complete_credit = models.PositiveIntegerField()
     academic_year = models.ForeignKey('AcademicYear',null=False, on_delete=models.CASCADE)
     etudiant = models.ForeignKey('Etudiant',null=False,default = None, on_delete=models.CASCADE)

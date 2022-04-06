@@ -9,7 +9,7 @@ class AcademicYearAdmin(admin.ModelAdmin):
     
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('code','name','academicyear')
+    list_display = ('code','name','academic_year')
     
 @admin.register(Faculty)
 class FacultyAdmin(admin.ModelAdmin):
@@ -29,7 +29,7 @@ class AmphiAdmin(admin.ModelAdmin):
     
 @admin.register(Evaluation)
 class EvaluationAdmin(admin.ModelAdmin):
-    list_display = ('ue','note','exam')
+    list_display = ('ue','note')
     
 @admin.register(Ue)
 class UeAdmin(admin.ModelAdmin):
@@ -41,5 +41,9 @@ class EtudiantAdmin(admin.ModelAdmin):
     
 @admin.register(Transcript)
 class TranscriptAdmin(admin.ModelAdmin):
-    list_display = ('number','mgp','complete_credit','academicyear')
+    list_display = ('number','mgp','complete_credit','academic_year')
+    
+@admin.register(SchoolAt)
+class SchoolAtAdmin(admin.ModelAdmin):
+    pass
     
