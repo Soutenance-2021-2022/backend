@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from transcript.models import AcademicYear, Amphi, Etudiant, Evaluation, Exam, Faculty, Filiere, Level, Obtain, Participate, SchoolAt, Semester, Transcript, Ue
+from transcript.models import AcademicYear, Amphi, Etudiant, Evaluation, Faculty, Filiere, Level, SchoolAt, Semester, Transcript, Ue
 
 
 @admin.register(AcademicYear)
@@ -9,7 +9,7 @@ class AcademicYearAdmin(admin.ModelAdmin):
     
 @admin.register(Semester)
 class SemesterAdmin(admin.ModelAdmin):
-    list_display = ('code','name','academicyear')
+    list_display = ('code','name','academic_year')
     
 @admin.register(Faculty)
 class FacultyAdmin(admin.ModelAdmin):
@@ -27,13 +27,9 @@ class LevelAdmin(admin.ModelAdmin):
 class AmphiAdmin(admin.ModelAdmin):
     list_display = ('name','level','filiere')
     
-@admin.register(Exam)
-class ExamAdmin(admin.ModelAdmin):
-    list_display = ('code','intitule')
-    
 @admin.register(Evaluation)
 class EvaluationAdmin(admin.ModelAdmin):
-    list_display = ('ue','note','exam')
+    list_display = ('ue','note')
     
 @admin.register(Ue)
 class UeAdmin(admin.ModelAdmin):
@@ -45,5 +41,9 @@ class EtudiantAdmin(admin.ModelAdmin):
     
 @admin.register(Transcript)
 class TranscriptAdmin(admin.ModelAdmin):
-    list_display = ('number','mgp','complete_credit','academicyear')
+    list_display = ('number','mgp','complete_credit','academic_year')
+    
+@admin.register(SchoolAt)
+class SchoolAtAdmin(admin.ModelAdmin):
+    pass
     
