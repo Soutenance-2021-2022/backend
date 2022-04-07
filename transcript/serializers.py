@@ -117,6 +117,11 @@ class TranscriptSerializer(serializers.ModelSerializer):
             'academic_year',
             'etudiant'
         ]
+        
+class TranscriptNormalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transcript
+        fields ='__all__'
 class EvaluationSerializer(serializers.ModelSerializer):
     ue = UeRelatedField(queryset=Ue.objects.all(), many=False)
     class Meta:

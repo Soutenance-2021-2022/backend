@@ -1,10 +1,11 @@
 from re import search
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets,generics
 from rest_framework.response import Response
 from transcript.models import Amphi, Etudiant, Evaluation, SchoolAt, Transcript
-from transcript.serializers import AmphiSerializer, EtudiantSerializer, EvaluationSerializer, SchoolAtSerializer, TranscriptSerializer
+from transcript.serializers import AmphiSerializer, EtudiantSerializer, EvaluationSerializer, SchoolAtSerializer, TranscriptNormalSerializer, TranscriptSerializer
 from django.db.models import Q
+
 
 # Create your views here.
 class EtudiantViewSet(viewsets.ModelViewSet):
@@ -14,7 +15,13 @@ class EtudiantViewSet(viewsets.ModelViewSet):
 class AmphiViewSet(viewsets.ModelViewSet):
     queryset = Amphi.objects.all()
     serializer_class = AmphiSerializer
+
+class TranscriptApiViewSet(generics.ListCreateAPIView):
+    queryset = Transcript.objects.all()
+    search_fields = ['=number']
+    serializer_class = TranscriptNormalSerializer
     
+         
 class TranscriptViewSet(viewsets.ViewSet):
     
     
@@ -36,6 +43,7 @@ class TranscriptViewSet(viewsets.ViewSet):
             'data': custom_response
         })
     
+    
 class EvaluationViewSet(viewsets.ModelViewSet):
    
     def list(self, request):
@@ -56,11 +64,31 @@ class SchooAtViewSet(viewsets.ModelViewSet):
         })
 class SearchTranscriptView(viewsets.ModelViewSet):
        
-    def list(self, request):
+    # def list(self, request):
         
-        search_val = request.query_params.get('number')
-        transcript = Transcript.objects.filter(number__contains=search_val)
+    #     search_val = request.query_params.get('number')
+    #     transcript = Transcript.objects.filter(number__contains=search_val)
       
+        
+    #     find_tran_serializer = TranscriptSerializer(transcript, many=True)
+    #     response = find_tran_serializer.data
+    #     custom_response =[]
+        
+    #     for item in response:
+            
+    #         evaluations = Evaluation.objects.filter(etudiant=item['etudiant']['id'])
+    #         eval_serialize = EvaluationSerializer(evaluations, many=True)
+    #         item['evaluations'] = eval_serialize.data
+    #         custom_response.append(item)
+        
+    #     return Response({
+    #         'data': custom_response
+    #     })
+    
+    def retrieve(self, request,pk=None):
+        
+        transcript = Transcript.objects.filter(id=pk)
+    
         
         find_tran_serializer = TranscriptSerializer(transcript, many=True)
         response = find_tran_serializer.data
@@ -76,7 +104,7 @@ class SearchTranscriptView(viewsets.ModelViewSet):
         return Response({
             'data': custom_response
         })
-         
+
         
         
         
