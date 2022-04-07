@@ -2,8 +2,34 @@
 from dataclasses import field, fields
 from rest_framework import serializers
 
-from transcript.models import Amphi, Etudiant, Evaluation, Faculty, Filiere, Level, SchoolAt, Transcript, Ue
+from transcript.models import AcademicYear, Amphi, Etudiant, Evaluation, Faculty, Filiere, Level, SchoolAt, Semester, Transcript, Ue
 
+class AcademicSerializer(serializers.ModelSerializer):
+    # tracks = TrackSerializer(many=True, read_only=True)
+    class Meta:
+        model = AcademicYear
+        fields = '__all__'
+        
+class AcademicRelatedField(serializers.RelatedField):
+    def to_representation(self, instance):
+        return AcademicSerializer(instance).data
+    
+    def to_internal_value(self, data):
+        return self.queryset.get(pk=data)
+    
+class SemesterSerializer(serializers.ModelSerializer):
+    academic_year = AcademicRelatedField(queryset=AcademicYear.objects.all(), many=False)
+    class Meta:
+        model = Semester
+        fields = '__all__'  
+        
+class SemesterRelatedField(serializers.RelatedField):
+    def to_representation(self, instance):
+        return SemesterSerializer(instance).data
+    
+    def to_internal_value(self, data):
+        return self.queryset.get(pk=data)
+      
 class EtudiantSerializer(serializers.ModelSerializer):
     # tracks = TrackSerializer(many=True, read_only=True)
     class Meta:
@@ -67,6 +93,7 @@ class AmphiRelatedField(serializers.RelatedField):
         return self.queryset.get(pk=data) 
    
 class UeSerializer(serializers.ModelSerializer):
+    semester = SemesterRelatedField(queryset=Semester.objects.all(), many=False)
     class Meta:
         model = Ue
         fields = '__all__'
@@ -80,6 +107,7 @@ class UeRelatedField(serializers.RelatedField):
 
 class TranscriptSerializer(serializers.ModelSerializer):
     etudiant = EtudiantRelatedField(queryset=Etudiant.objects.all(), many=False)
+    academic_year = AcademicRelatedField(queryset=AcademicYear.objects.all(), many=False)
     class Meta:
         model = Transcript
         fields = [

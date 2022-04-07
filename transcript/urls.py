@@ -1,7 +1,7 @@
 
 # from rest_framework import routers
 from django.urls import path
-from transcript.views import AmphiViewSet, EtudiantViewSet, EvaluationViewSet, SchooAtViewSet,TranscriptViewSet
+from transcript.views import AmphiViewSet, EtudiantViewSet, EvaluationViewSet, SchooAtViewSet, SearchTranscriptView,TranscriptViewSet
 
 # router = routers.DefaultRouter()
 # router.register('etudiants',EtudiantViewSet)
@@ -15,5 +15,8 @@ urlpatterns = [
     })),
      path('school_at/<int:pk>', SchooAtViewSet.as_view({
             'get': 'retrieve'
+    })),
+    path('check_existing', SearchTranscriptView.as_view({
+            'get': 'list'
     }))
 ]

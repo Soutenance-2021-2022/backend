@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from transcript.models import Amphi, Etudiant, Evaluation, SchoolAt, Transcript
 from transcript.serializers import AmphiSerializer, EtudiantSerializer, EvaluationSerializer, SchoolAtSerializer, TranscriptSerializer
+from django.db.models import Q
 
 # Create your views here.
 class EtudiantViewSet(viewsets.ModelViewSet):
@@ -53,5 +54,30 @@ class SchooAtViewSet(viewsets.ModelViewSet):
             return Response({
             'data': school_at_serializer.data
         })
+class SearchTranscriptView(viewsets.ModelViewSet):
+       
+    def list(self, request):
+        
+        search_val = request.query_params.get('number')
+        transcript = Transcript.objects.filter(number__contains=search_val)
+      
+        
+        find_tran_serializer = TranscriptSerializer(transcript, many=True)
+        response = find_tran_serializer.data
+        custom_response =[]
+        
+        for item in response:
+            
+            evaluations = Evaluation.objects.filter(etudiant=item['etudiant']['id'])
+            eval_serialize = EvaluationSerializer(evaluations, many=True)
+            item['evaluations'] = eval_serialize.data
+            custom_response.append(item)
+        
+        return Response({
+            'data': custom_response
+        })
+         
+        
+        
         
        
