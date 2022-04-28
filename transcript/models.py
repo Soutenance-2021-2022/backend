@@ -62,6 +62,9 @@ class Etudiant(models.Model):
     born_at = models.CharField(max_length=255)
     gender = models.CharField(max_length=25)
     
+    #def __str__(self):
+        #return self.matricule
+    
   
     
 class SchoolAt(models.Model):

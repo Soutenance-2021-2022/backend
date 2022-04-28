@@ -2,19 +2,65 @@ from re import search
 from django.shortcuts import render
 from rest_framework import viewsets,generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated 
 from transcript.models import Amphi, Etudiant, Evaluation, SchoolAt, Transcript
 from transcript.serializers import AmphiSerializer, EtudiantSerializer, EvaluationSerializer, SchoolAtSerializer, TranscriptNormalSerializer, TranscriptSerializer
 from django.db.models import Q
 
+from rest_framework import status
 
 # Create your views here.
 class EtudiantViewSet(viewsets.ModelViewSet):
     queryset = Etudiant.objects.all()
     serializer_class = EtudiantSerializer
     
+    def list(self, request):
+        serializer = EtudiantSerializer(Etudiant.objects.all(), many=True)
+        return Response({
+            'data': serializer.data
+        })
+
+    def retrieve(self, request, pk=None):
+        surveillant = Etudiant.objects.get(id=pk)
+        serializer = EtudiantSerializer(surveillant)
+        return Response({
+            'data': serializer.data
+        })
+
+    def create(self, request):
+        serializer = EtudiantSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'data': serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+    def update(self, request, pk=None):
+        etudiant = Etudiant.objects.get(id=pk)
+        serializer = EtudiantSerializer(instance=etudiant, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'data': serializer.data}, status=status.HTTP_202_ACCEPTED)
+
+    def destroy(self, request, pk=None):
+        etudiant = Etudiant.objects.get(id=pk)
+        etudiant.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        
+    
 class AmphiViewSet(viewsets.ModelViewSet):
     queryset = Amphi.objects.all()
     serializer_class = AmphiSerializer
+    
+    
+    def get(self, request):
+        serializer = AmphiSerializer(Amphi.objects.all(), many=True)
+        return Response({
+            "data": serializer.data
+        })
 
 class TranscriptApiViewSet(generics.ListCreateAPIView):
     queryset = Transcript.objects.all()
@@ -23,7 +69,7 @@ class TranscriptApiViewSet(generics.ListCreateAPIView):
     
          
 class TranscriptViewSet(viewsets.ViewSet):
-    
+    permissions_classes = [IsAuthenticated]
     
     def list(self, request):
         
@@ -52,6 +98,20 @@ class EvaluationViewSet(viewsets.ModelViewSet):
             'data': serializer.data
         })
 class SchooAtViewSet(viewsets.ModelViewSet):
+    
+    def list(self, request):
+        serializer = SchoolAtSerializer(SchoolAt.objects.all(), many=True)
+        return Response({
+            'data': serializer.data
+        })
+        
+    def create(self, request):
+        serializer = SchoolAtSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'data': serializer.data
+        }, status=status.HTTP_201_CREATED)
        
     def retrieve(self, request, pk=None):
         
@@ -62,28 +122,27 @@ class SchooAtViewSet(viewsets.ModelViewSet):
             return Response({
             'data': school_at_serializer.data
         })
-class SearchTranscriptView(viewsets.ModelViewSet):
-       
-    # def list(self, request):
-        
-    #     search_val = request.query_params.get('number')
-    #     transcript = Transcript.objects.filter(number__contains=search_val)
-      
-        
-    #     find_tran_serializer = TranscriptSerializer(transcript, many=True)
-    #     response = find_tran_serializer.data
-    #     custom_response =[]
-        
-    #     for item in response:
             
-    #         evaluations = Evaluation.objects.filter(etudiant=item['etudiant']['id'])
-    #         eval_serialize = EvaluationSerializer(evaluations, many=True)
-    #         item['evaluations'] = eval_serialize.data
-    #         custom_response.append(item)
+class StudentSchoolATViewSet(viewsets.ModelViewSet):
+       
+    def retrieve(self, request, pk=None):    
+            
+        school_at = SchoolAt.objects.filter(amphi=pk)
+        amphi = []
+    
+        custom_response =[]
         
-    #     return Response({
-    #         'data': custom_response
-    #     })
+        for item in school_at:
+            custom_response.append(Etudiant.objects.get(id=item.etudiant.id))
+            
+        
+        response_d = EtudiantSerializer(custom_response, many=True)
+        
+        return Response({
+           'data': response_d.data
+        })
+
+class SearchTranscriptView(viewsets.ModelViewSet):
     
     def retrieve(self, request,pk=None):
         

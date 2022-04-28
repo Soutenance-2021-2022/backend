@@ -3,3 +3,5 @@ psycopg2
 djangorestframework
 django-filter
 django-cors-headers
+PyJWT
+pytz
