@@ -29,7 +29,7 @@ class AmphiAdmin(admin.ModelAdmin):
     
 @admin.register(Evaluation)
 class EvaluationAdmin(admin.ModelAdmin):
-    list_display = ('ue','note')
+    list_display = ('id','ue','note','etudiant','examen')
     
 @admin.register(Ue)
 class UeAdmin(admin.ModelAdmin):

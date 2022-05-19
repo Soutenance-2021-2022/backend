@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework import viewsets,generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
-from transcript.models import Amphi, Etudiant, Evaluation, SchoolAt, Transcript
-from transcript.serializers import AmphiSerializer, EtudiantSerializer, EvaluationSerializer, SchoolAtSerializer, TranscriptNormalSerializer, TranscriptSerializer
+from transcript.models import Amphi, Etudiant, Evaluation, SchoolAt, Transcript, Ue
+from transcript.serializers import AmphiSerializer, EtudiantSerializer, EvaluationSerializer, SchoolAtSerializer, TranscriptNormalSerializer, TranscriptSerializer, UeSerializer
 from django.db.models import Q
 
 from rest_framework import status
@@ -97,6 +97,7 @@ class EvaluationViewSet(viewsets.ModelViewSet):
         return Response({
             'data': serializer.data
         })
+        
 class SchooAtViewSet(viewsets.ModelViewSet):
     
     def list(self, request):
@@ -123,13 +124,30 @@ class SchooAtViewSet(viewsets.ModelViewSet):
             'data': school_at_serializer.data
         })
             
+            
+class AddNoteAtViewSet(viewsets.ModelViewSet):
+    
+    def create(self, request):
+        elements = request.data
+        for item in elements['data']:
+           etudiant = Etudiant.objects.filter(matricule=item['matricule'])
+           if(len(etudiant) > 0):
+                Evaluation.objects.create(
+                    etudiant=etudiant[0], 
+                    ue=Ue.objects.get(id=elements['ue']), 
+                    note=item['note'],
+                    examen=elements['examen']
+                    )
+               
+        
+        return Response({
+            'data': {}
+        }, status=status.HTTP_201_CREATED)
 class StudentSchoolATViewSet(viewsets.ModelViewSet):
        
     def retrieve(self, request, pk=None):    
             
         school_at = SchoolAt.objects.filter(amphi=pk)
-        amphi = []
-    
         custom_response =[]
         
         for item in school_at:
@@ -140,6 +158,16 @@ class StudentSchoolATViewSet(viewsets.ModelViewSet):
         
         return Response({
            'data': response_d.data
+        })
+class UeAmphiViewSet(viewsets.ModelViewSet):
+    
+    def retrieve(self, request, pk=None):
+            
+        ue_amphi = Ue.objects.filter(amphi=pk)
+        response_d = UeSerializer(ue_amphi, many=True)
+            
+        return Response({
+        'data': response_d.data
         })
 
 class SearchTranscriptView(viewsets.ModelViewSet):
@@ -164,7 +192,23 @@ class SearchTranscriptView(viewsets.ModelViewSet):
             'data': custom_response
         })
 
+class StudentEvaluationViewSet(viewsets.ModelViewSet):
+     def retrieve(self, request, pk=None):    
+        evaluation = Evaluation.objects.filter(etudiant=pk)
+        response_d = EvaluationSerializer(evaluation, many=True)
         
+        return Response({
+           'data': response_d.data
+        })
+class OperationTranscriptViewSet(viewsets.ModelViewSet):
+    
         
+    def retrieve(self, request, pk=None):    
+        allEvaluation = Evaluation.objects.filter(etudiant=pk)
+        etudiant = Etudiant.objects.filter(id=pk)
+        # response_d = EvaluationSerializer(evaluation, many=True)
+        print(allEvaluation)
         
-       
+        return Response({
+           'data': ''
+        })
