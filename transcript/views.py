@@ -202,13 +202,85 @@ class StudentEvaluationViewSet(viewsets.ModelViewSet):
         })
 class OperationTranscriptViewSet(viewsets.ModelViewSet):
     
-        
+   
+    
+    def determined_intermediare_note(self,notes):
+        total =0
+        for item in notes:
+            if(item['ue']['has_tp'] == True):
+                if(item['examen'] == "CC"):
+                    total+=float(item['note'])
+                if(item['examen'] == "SN"):
+                    total+=float(item['note'])*2
+                if(item['examen'] == "TP"):
+                    total+=float(item['note'])*2
+            else:
+                if(item['examen'] == "CC"):
+                    total+=float(item['note'])*1.5
+                if(item['examen'] == "SN"):
+                    total+=float(item['note'])*3.5
+        return total
+    
+  
+    def get_letter_grade(self,notefinale) :
+        decision={
+            "grade":'',
+            "mgp":0.0
+        }
+        if 80<= notefinale and notefinale  <= 100:
+            decision['grade'] = 'A'
+            decision['mgp'] = 4.00
+        elif 75 <= notefinale and notefinale <= 79:
+            decision['grade'] = 'A-'
+            decision['mgp'] = 3.70
+        elif 70 <= notefinale and notefinale <= 74:
+            decision['grade'] = 'B+'
+            decision['mgp'] = 3.30
+        elif 65 <= notefinale and notefinale <= 69:
+            decision['grade'] = 'B'
+            decision['mgp'] = 3.00
+        elif 60 <= notefinale and notefinale <= 64:
+            decision['grade'] = 'B-'
+            decision['mgp'] = 2.70
+        elif 55 <= notefinale and notefinale <= 59:
+            decision['grade'] = 'C+'
+            decision['mgp'] = 2.30
+        elif 50 <= notefinale and notefinale <= 54:
+            decision['grade'] = 'C'
+            decision['mgp'] = 2.00
+        elif 45 <= notefinale and notefinale<= 49:
+            decision['grade'] = 'C-'
+            decision['mgp'] = 1.70
+        elif 40 <= notefinale and notefinale<= 44:
+            decision['grade'] = 'D+'
+            decision['mgp'] = 1.30
+        elif 35 <= notefinale and notefinale <= 39:
+            decision['grade'] = 'D'
+            decision['mgp'] = 1.00
+        elif 30 <= notefinale and notefinale <= 34:
+            decision['grade'] = 'E'
+            decision['mgp'] = 0.00
+        else:
+            decision['grade'] = 'F'
+            decision['mgp'] = 0.00
+        return decision
+   
     def retrieve(self, request, pk=None):    
-        allEvaluation = Evaluation.objects.filter(etudiant=pk)
+        evaluation = Evaluation.objects.filter(etudiant=pk)
         etudiant = Etudiant.objects.filter(id=pk)
-        # response_d = EvaluationSerializer(evaluation, many=True)
-        print(allEvaluation)
+        allEvaluation = EvaluationSerializer(evaluation, many=True)
+        id_used =[]
+        notes_classed=[]
+        for item in allEvaluation.data:
+            if item['ue']['id'] not in id_used:
+                note = Evaluation.objects.filter(etudiant=pk).filter(ue=item['ue']['id'])
+                note_serializers = EvaluationSerializer(note, many=True)
+                notes = note_serializers.data
+                note_ee = self.determined_intermediare_note(notes)
+                print(note_ee)
+                print(self.get_letter_grade(note_ee))
+                id_used.append(item['ue']['id'])
         
         return Response({
-           'data': ''
+           'data': notes_classed
         })

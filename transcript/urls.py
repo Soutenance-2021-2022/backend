@@ -52,5 +52,4 @@ urlpatterns = [
      path('can_u_print/<int:pk>', OperationTranscriptViewSet.as_view({
          "get":"retrieve"
     }))
-
 ]
