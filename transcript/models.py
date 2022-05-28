@@ -111,7 +111,6 @@ class Transcript(models.Model):
     etudiant = models.ForeignKey('Etudiant',null=False,default = None, on_delete=models.CASCADE)
     decision= models.CharField(max_length=10,default = None,blank=True, null=True)
     hash=models.CharField(max_length=255,blank=True, null=True)
-    info_encrypt=models.CharField(max_length=255,blank=True, null=True)
     def __str__(self):
         return self.number
 
