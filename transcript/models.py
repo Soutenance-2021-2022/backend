@@ -37,6 +37,7 @@ class Level(models.Model):
   
 class Amphi(models.Model):
     name = models.CharField(max_length=255)
+    academic_year = models.ForeignKey('AcademicYear',null=False, on_delete=models.CASCADE)
     level = models.ForeignKey('Level',null=False, on_delete=models.CASCADE)
     filiere = models.ForeignKey('Filiere',null=False, on_delete=models.CASCADE)
     
@@ -108,7 +109,9 @@ class Transcript(models.Model):
     complete_credit = models.PositiveIntegerField()
     academic_year = models.ForeignKey('AcademicYear',null=False, on_delete=models.CASCADE)
     etudiant = models.ForeignKey('Etudiant',null=False,default = None, on_delete=models.CASCADE)
-    
+    decision= models.CharField(max_length=10,default = None,blank=True, null=True)
+    hash=models.CharField(max_length=255,blank=True, null=True)
+    info_encrypt=models.CharField(max_length=255,blank=True, null=True)
     def __str__(self):
         return self.number
 

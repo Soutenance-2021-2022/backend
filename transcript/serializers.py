@@ -81,6 +81,7 @@ class LevelRelatedField(serializers.RelatedField):
 class AmphiSerializer(serializers.ModelSerializer):
     filiere = FiliereRelatedField(queryset=Filiere.objects.all())
     level = LevelRelatedField(queryset=Level.objects.all())
+    academic_year = AcademicRelatedField(queryset=AcademicYear.objects.all(), many=False)
     class Meta:
         model = Amphi
         fields = '__all__'
