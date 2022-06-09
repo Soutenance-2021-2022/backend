@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    
-    #djangoApp
+
+    # djangoApp
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,18 +43,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_filters',
-    
-    #myApp
+
+    # myApp
     'transcript',
     'users'
 ]
 
 
 REST_FRAMEWORK = {
-      'DEFAULT_FILTER_BACKENDS' :[
+    'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
-        ]
+    ]
 }
 
 MIDDLEWARE = [
@@ -144,10 +144,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = "users.User" 
+AUTH_USER_MODEL = "users.User"
 
 CORS_ORIGIN_WHITELIST = (
-'http://localhost:4200',
-'http://localhost:8000',
+    'http://localhost:4200',
+    'http://localhost:8000',
 )
 
+# CORS_ORIGIN_WHITELIST = ['*']

@@ -29,9 +29,9 @@ def signin(request):
     password = request.data.get('password')
     user = User.objects.filter(email=email).first()
     if user is None:
-        raise exceptions.AuthenticationFailed("user is not found ")
+        raise exceptions.AuthenticationFailed("Cet utilisateur n'existe pas")
     if not user.check_password(password):
-        raise exceptions.AuthenticationFailed("incorret password")
+        raise exceptions.AuthenticationFailed("Mot de passe incorrect")
 
     response = Response()
     # je genere le json web tken

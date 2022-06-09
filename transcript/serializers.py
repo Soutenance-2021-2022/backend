@@ -111,13 +111,7 @@ class TranscriptSerializer(serializers.ModelSerializer):
     academic_year = AcademicRelatedField(queryset=AcademicYear.objects.all(), many=False)
     class Meta:
         model = Transcript
-        fields = [
-            'number',
-            'mgp',
-            'complete_credit',
-            'academic_year',
-            'etudiant'
-        ]
+        fields ='__all__'
         
 class TranscriptNormalSerializer(serializers.ModelSerializer):
     class Meta:
@@ -136,3 +130,11 @@ class SchoolAtSerializer(serializers.ModelSerializer):
         model = SchoolAt
         fields = '__all__'
         
+class CipherSerializer(serializers.Serializer):
+   matricule = serializers.CharField(max_length=10)
+   number = serializers.CharField(max_length=255)
+   name = serializers.CharField(max_length=255)
+   surname = serializers.CharField(max_length=255)
+   mgp = serializers.DecimalField(max_digits=3, decimal_places=2)
+   decision = serializers.CharField(max_length=255)
+   hash = serializers.CharField(max_length=255)

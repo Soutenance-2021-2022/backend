@@ -11,6 +11,7 @@ def access_tokens(user):
         'user_id': user.id,
         'username': user.username,
         'role': user.role.name,
+        'is_active': user.is_active,
         'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
         'iat': datetime.datetime.utcnow()
     }

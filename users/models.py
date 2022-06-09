@@ -19,3 +19,4 @@ class User(AbstractUser):
     password = models.CharField(max_length=255)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
     username = models.CharField(max_length=255,unique=True)
+    is_active = models.BooleanField(default=True)

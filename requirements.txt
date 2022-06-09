@@ -6,3 +6,5 @@ django-cors-headers
 PyJWT
 pytz
 django-environ
+pycryptodome
+pycryptodome-test-vectors
